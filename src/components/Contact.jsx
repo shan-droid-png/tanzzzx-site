@@ -43,7 +43,11 @@ const Contact = () => {
           <div className="absolute bottom-0 left-0 w-4 h-4 border-b border-l border-white"></div>
           <div className="absolute bottom-0 right-0 w-4 h-4 border-b border-r border-white"></div>
 
-          <form className="flex flex-col gap-10">
+          <form className="flex flex-col gap-10" name="contact" method="POST" data-netlify="true" netlify-honeypot="bot-field">
+            <input type="hidden" name="form-name" value="contact" />
+            <p className="hidden">
+              <label>Don’t fill this out if you're human: <input name="bot-field" /></label>
+            </p>
             <div className="relative group">
               <input type="text" id="name" placeholder=" " className="peer w-full bg-transparent border-b border-white/30 py-3 text-white focus:outline-none focus:border-white transition-colors" required />
               <label htmlFor="name" className="absolute left-0 top-3 text-white/50 text-xs tracking-widest uppercase origin-left transform -translate-y-6 peer-placeholder-shown:translate-y-0 transition-all duration-300">Name</label>
