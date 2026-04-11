@@ -4,22 +4,22 @@ import { Link } from 'react-scroll';
 
 const slides = [
   {
-    url: '/video/hero0.mp4',
+    url: '/video/hero0.webm',
     category: 'Video Production',
     title: 'Showreel Showcase',
   },
   {
-    url: '/video/hero1.mp4',
+    url: '/video/hero1.webm',
     category: 'Video Production',
     title: 'Brand Shoot',
   },
   {
-    url: '/video/hero2.mp4',
+    url: '/video/hero2.webm',
     category: '3D Animation',
     title: 'Architectural Visualization',
   },
   {
-    url: '/video/hero3.mp4',
+    url: '/video/hero3.webm',
     category: 'Video Production',
     title: 'Cinematography Array',
   },

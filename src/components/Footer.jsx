@@ -1,6 +1,17 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 
 const Footer = () => {
+  const [activeModal, setActiveModal] = useState(null);
+
+  // Prevent scrolling when legal overlay is open
+  useEffect(() => {
+    if (activeModal) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => { document.body.style.overflow = 'auto'; };
+  }, [activeModal]);
   return (
     <footer className="bg-black text-white border-t border-white/10">
       {/* ── Main footer grid ── */}
@@ -10,7 +21,6 @@ const Footer = () => {
         <div className="p-10 md:p-14 border-b md:border-b-0 md:border-r border-white/10 flex flex-col justify-between gap-12">
           <div>
             <div className="flex items-center gap-3 mb-6">
-              <span className="w-7 h-7 bg-white rounded-full flex-shrink-0" />
               <span className="font-black text-xl tracking-tighter uppercase">Tanzzzx Studios</span>
             </div>
             <p className="text-white/40 text-sm leading-relaxed font-light">
@@ -37,7 +47,7 @@ const Footer = () => {
           <h4 className="text-[9px] font-black tracking-[0.3em] uppercase text-white/30 mb-8">Contact</h4>
           <ul className="space-y-4">
             <li className="text-sm font-semibold uppercase">hello@tanzzzx.com</li>
-            <li className="text-sm font-semibold uppercase">+1 (555) 019-8432</li>
+            <li className="text-sm font-semibold uppercase">+91 9123855424</li>
             <li className="text-sm text-white/50 leading-relaxed font-light mt-6">
               194 Monochrome Ave<br />Studio 4A<br />New York, NY 10013
             </li>
@@ -83,9 +93,57 @@ const Footer = () => {
       <div className="flex flex-col md:flex-row items-center justify-between px-10 md:px-14 py-5 gap-4">
         <p className="text-white/20 text-[9px] tracking-widest uppercase">All rights reserved. Tanzzzx Studios {new Date().getFullYear()}</p>
         <div className="flex gap-8 text-white/20 text-[9px] tracking-widest uppercase">
-          <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
-          <a href="#" className="hover:text-white transition-colors">Terms</a>
-          <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-white transition-colors">↑ Back to Top</button>
+          <button onClick={() => setActiveModal('privacy')} className="hover:text-white transition-colors cursor-pointer uppercase">Privacy Policy</button>
+          <button onClick={() => setActiveModal('terms')} className="hover:text-white transition-colors cursor-pointer uppercase">Terms</button>
+          <button onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })} className="hover:text-white transition-colors uppercase">↑ Back to Top</button>
+        </div>
+      </div>
+
+      {/* ── Legal Fullscreen Overlay ── */}
+      <div className={`fixed inset-0 z-[200] bg-black flex flex-col transition-all duration-700 ${activeModal ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+        <div className="flex items-center justify-between px-4 sm:px-8 md:px-14 py-4 md:py-6 border-b border-white/10 shrink-0">
+          <span className="text-white font-black tracking-widest text-sm md:text-md uppercase">
+            {activeModal === 'privacy' ? 'Privacy Policy' : 'Terms of Service'}
+          </span>
+          <button onClick={() => setActiveModal(null)} className="border border-white/40 w-12 h-10 md:w-16 md:h-12 flex items-center justify-center text-white text-xl md:text-2xl font-thin hover:border-white transition-colors">
+            ✕
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto px-6 sm:px-10 md:px-20 py-10 md:py-20 relative" style={{ scrollbarWidth: 'none' }}>
+          <div className="max-w-3xl mx-auto text-white/60 space-y-8 text-xs md:text-sm leading-relaxed font-light selection:bg-white selection:text-black pb-20">
+            {activeModal === 'privacy' && (
+              <>
+                <p className="uppercase tracking-[0.2em] font-bold text-white mb-12">Last Updated: {new Date().toLocaleDateString()}</p>
+                <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2">1. Information We Collect</h3>
+                <p>We may collect personal identification information from Users in a variety of ways, including, but not limited to, when Users visit our site, fill out a form, and in connection with other activities, services, features or resources we make available. We only collect personal information from Users if they voluntarily submit precisely that information to us.</p>
+                
+                <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2 mt-10">2. How We Use Information</h3>
+                <p>Tanzzzx Studios may collect and use User personal information for the following purposes: To improve customer service (information you provide helps us respond to your service requests and support needs more efficiently), to personalize user experience, and to send periodic electronic communications regarding project updates.</p>
+                
+                <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2 mt-10">3. Information Protection</h3>
+                <p>We adopt appropriate data collection, storage and processing practices and strict monochrome security measures to protect against unauthorized access, alteration, disclosure or destruction of your personal information, username, password, transaction information and data stored natively on our Site directories.</p>
+                
+                <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2 mt-10">4. Sharing Your Information</h3>
+                <p>We do not sell, trade, or rent User personal identification information to external third parties. We may share generic aggregated demographic information not linked to any personal identification information regarding visitors and users with our business partners, trusted affiliates and advertisers for the purposes outlined above.</p>
+              </>
+            )}
+            {activeModal === 'terms' && (
+              <>
+                <p className="uppercase tracking-[0.2em] font-bold text-white mb-12">Last Updated: {new Date().toLocaleDateString()}</p>
+                <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2">1. Acceptance of Terms</h3>
+                <p>By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement. Additionally, when using this website's particular operational services, you shall be subject to any posted guidelines or rules applicable to such services.</p>
+                
+                <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2 mt-10">2. Intellectual Property</h3>
+                <p>The Site and its original artistic content, features, and functionality (including 3D assets, video productions, and visual frameworks) are owned by Tanzzzx Studios and are protected by international copyright, trademark, patent, trade secret, and other intellectual property or proprietary rights laws.</p>
+                
+                <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2 mt-10">3. Usage License</h3>
+                <p>Permission is temporarily granted to download one copy of the materials (information or visual artifacts) on Tanzzzx Studios's website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of physical title, and you may not legally modify or copy the materials for commercial gain.</p>
+                
+                <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2 mt-10">4. Disclaimer</h3>
+                <p>The cinematic materials on Tanzzzx Studios's website are provided on an 'as is' basis. Tanzzzx Studios makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, or non-infringement of intellectual property or other absolute violation of rights.</p>
+              </>
+            )}
+          </div>
         </div>
       </div>
     </footer>

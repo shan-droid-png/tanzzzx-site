@@ -24,7 +24,7 @@ const Contact = () => {
               </div>
               <div>
                 <span className="text-white/40 block mb-3">Direct</span>
-                <p className="border-l-2 border-white/20 pl-4">hello@tanzzzx.com<br />+1 (555) 019-8432</p>
+                <p className="border-l-2 border-white/20 pl-4">hello@tanzzzx.com<br />+91 9123855424</p>
               </div>
             </div>
           </motion.div>
@@ -56,8 +56,12 @@ const Contact = () => {
               <textarea id="message" rows="4" placeholder=" " className="peer w-full bg-transparent border-b border-white/30 py-3 text-white focus:outline-none focus:border-white transition-colors resize-none" required></textarea>
               <label htmlFor="message" className="absolute left-0 top-3 text-white/50 text-xs tracking-widest uppercase origin-left transform -translate-y-6 peer-placeholder-shown:translate-y-0 transition-all duration-300">Message</label>
             </div>
-            <button type="submit" className="w-full py-5 mt-4 bg-white text-black font-bold tracking-widest uppercase hover:bg-black hover:text-white border border-white transition-colors duration-300">
-              Send Transmission
+            <button type="submit" className="group relative w-full py-5 mt-4 bg-white text-black font-bold tracking-[0.2em] uppercase overflow-hidden border border-white">
+              <span className="relative z-10 group-hover:text-white transition-colors duration-500 flex items-center justify-center gap-4">
+                <span>Send Transmission</span>
+                <span className="group-hover:translate-x-2 transition-transform duration-500">→</span>
+              </span>
+              <div className="absolute inset-0 bg-black translate-y-full group-hover:translate-y-0 transition-transform duration-500 ease-[cubic-bezier(0.16,1,0.3,1)]"></div>
             </button>
           </form>
         </motion.div>
