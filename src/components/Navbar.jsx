@@ -158,10 +158,7 @@ const Navbar = () => {
           >
             {/* Menu Header */}
             <div className="flex items-center justify-between px-6 sm:px-8 py-5 border-b border-white/10 shrink-0">
-              <div>
-                <p className="text-white/30 text-[9px] tracking-[0.3em] uppercase font-bold mb-0.5">Navigation</p>
-                <span className="text-white font-black tracking-tighter text-base uppercase">Tanzzzx Studios</span>
-              </div>
+              <span className="text-white font-black tracking-tighter text-base uppercase">Tanzzzx Studios</span>
               <button
                 onClick={() => setMenuOpen(false)}
                 className="w-10 h-10 flex items-center justify-center border border-white/20 text-white/60 hover:text-white hover:border-white transition-colors text-base"
