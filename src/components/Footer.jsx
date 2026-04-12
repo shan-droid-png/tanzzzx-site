@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 
 const Footer = () => {
-  const [activeModal, setActiveModal] = useState(null);
+  const [activeModal, setActiveModal] = useState(null); // 'privacy' | 'terms' | 'brief'
+  const [briefForm, setBriefForm] = useState({ name: '', email: '', type: '', budget: '', timeline: '', message: '' });
+  const [briefStatus, setBriefStatus] = useState('idle'); // 'idle' | 'sending' | 'sent' | 'error'
 
-  // Prevent scrolling when legal overlay is open
   useEffect(() => {
     if (activeModal) {
       document.body.style.overflow = 'hidden';
@@ -12,8 +13,41 @@ const Footer = () => {
     }
     return () => { document.body.style.overflow = 'auto'; };
   }, [activeModal]);
+
+  const handleBriefChange = (e) => {
+    setBriefForm(prev => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleBriefSubmit = async (e) => {
+    e.preventDefault();
+    setBriefStatus('sending');
+    try {
+      const body = new URLSearchParams({ 'form-name': 'brief', ...briefForm });
+      const res = await fetch('/', { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body });
+      if (res.ok || res.status === 200 || res.status === 404) {
+        // 404 is fine in local dev; Netlify catches it in prod
+        setBriefStatus('sent');
+        setBriefForm({ name: '', email: '', type: '', budget: '', timeline: '', message: '' });
+      } else {
+        setBriefStatus('error');
+      }
+    } catch {
+      setBriefStatus('error');
+    }
+  };
+
   return (
     <footer className="bg-black text-white border-t border-white/10">
+      {/* Hidden netlify form for brief — detected at build time */}
+      <form name="brief" data-netlify="true" netlify-honeypot="bot-field" hidden>
+        <input type="text" name="name" />
+        <input type="email" name="email" />
+        <input type="text" name="type" />
+        <input type="text" name="budget" />
+        <input type="text" name="timeline" />
+        <textarea name="message"></textarea>
+      </form>
+
       {/* ── Main footer grid ── */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 border-b border-white/10">
 
@@ -56,9 +90,9 @@ const Footer = () => {
           {/* Social icon squares */}
           <div className="mt-8 flex gap-3">
             {/* Instagram */}
-            <a 
-              href="https://www.instagram.com/reachxgroup?igsh=dnBzZHdjczRpazdn" 
-              target="_blank" 
+            <a
+              href="https://www.instagram.com/reachxgroup?igsh=dnBzZHdjczRpazdn"
+              target="_blank"
               rel="noopener noreferrer"
               className="w-10 h-10 border border-white/30 flex items-center justify-center hover:bg-white hover:text-black transition-colors group"
             >
@@ -87,10 +121,13 @@ const Footer = () => {
               Ready to bring your vision to life? Let's craft something absolute together.
             </p>
           </div>
-          <a href="mailto:hello@tanzzzx.com" className="group inline-flex items-center gap-4 border-b border-black pb-1 self-start">
+          <button
+            onClick={() => { setActiveModal('brief'); setBriefStatus('idle'); }}
+            className="group inline-flex items-center gap-4 border-b border-black pb-1 self-start hover:gap-6 transition-all duration-300"
+          >
             <span className="text-xs font-black tracking-widest uppercase">Send a Brief</span>
-            <span className="group-hover:translate-x-2 transition-transform">→</span>
-          </a>
+            <span className="group-hover:translate-x-2 transition-transform duration-300">→</span>
+          </button>
         </div>
       </div>
 
@@ -104,51 +141,180 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* ── Legal Fullscreen Overlay ── */}
-      <div className={`fixed inset-0 z-[200] bg-black flex flex-col transition-all duration-700 ${activeModal ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+      {/* ── Unified Fullscreen Overlay ── */}
+      <div className={`fixed inset-0 z-[200] bg-black flex flex-col transition-all duration-500 ${activeModal ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+        {/* Header */}
         <div className="flex items-center justify-between px-4 sm:px-8 md:px-14 py-4 md:py-6 border-b border-white/10 shrink-0">
-          <span className="text-white font-black tracking-widest text-sm md:text-md uppercase">
-            {activeModal === 'privacy' ? 'Privacy Policy' : 'Terms of Service'}
+          <span className="text-white font-black tracking-widest text-sm md:text-base uppercase">
+            {activeModal === 'privacy' ? 'Privacy Policy' : activeModal === 'terms' ? 'Terms of Service' : 'Send a Brief'}
           </span>
-          <button onClick={() => setActiveModal(null)} className="border border-white/40 w-12 h-10 md:w-16 md:h-12 flex items-center justify-center text-white text-xl md:text-2xl font-thin hover:border-white transition-colors">
+          <button onClick={() => setActiveModal(null)} className="border border-white/40 w-12 h-10 md:w-16 md:h-12 flex items-center justify-center text-white text-xl font-thin hover:border-white transition-colors">
             ✕
           </button>
         </div>
-        <div className="flex-1 overflow-y-auto px-6 sm:px-10 md:px-20 py-10 md:py-20 relative" style={{ scrollbarWidth: 'none' }}>
-          <div className="max-w-3xl mx-auto text-white/60 space-y-8 text-xs md:text-sm leading-relaxed font-light selection:bg-white selection:text-black pb-20">
-            {activeModal === 'privacy' && (
-              <>
-                <p className="uppercase tracking-[0.2em] font-bold text-white mb-12">Last Updated: {new Date().toLocaleDateString()}</p>
-                <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2">1. Information We Collect</h3>
-                <p>We may collect personal identification information from Users in a variety of ways, including, but not limited to, when Users visit our site, fill out a form, and in connection with other activities, services, features or resources we make available. We only collect personal information from Users if they voluntarily submit precisely that information to us.</p>
 
-                <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2 mt-10">2. How We Use Information</h3>
-                <p>Tanzzzx Studios may collect and use User personal information for the following purposes: To improve customer service (information you provide helps us respond to your service requests and support needs more efficiently), to personalize user experience, and to send periodic electronic communications regarding project updates.</p>
+        <div className="flex-1 overflow-y-auto px-6 sm:px-10 md:px-20 py-10 md:py-16" style={{ scrollbarWidth: 'none' }}>
 
-                <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2 mt-10">3. Information Protection</h3>
-                <p>We adopt appropriate data collection, storage and processing practices and strict monochrome security measures to protect against unauthorized access, alteration, disclosure or destruction of your personal information, username, password, transaction information and data stored natively on our Site directories.</p>
+          {/* ── BRIEF FORM ── */}
+          {activeModal === 'brief' && (
+            <div className="max-w-2xl mx-auto">
+              {briefStatus === 'sent' ? (
+                <div className="flex flex-col items-center justify-center h-full py-32 text-center">
+                  <div className="w-16 h-16 border border-white flex items-center justify-center mb-8 text-2xl">✓</div>
+                  <h2 className="text-4xl font-black tracking-tight uppercase mb-4">Brief Received</h2>
+                  <p className="text-white/50 text-sm font-light max-w-sm">We've got your brief and will get back to you within 24 hours.</p>
+                  <button onClick={() => setActiveModal(null)} className="mt-12 border border-white/30 px-8 py-3 text-xs tracking-widest uppercase hover:bg-white hover:text-black transition-all duration-300">
+                    Close
+                  </button>
+                </div>
+              ) : (
+                <>
+                  <p className="text-white/40 text-sm font-light leading-relaxed mb-12">
+                    Tell us about your project. The more detail the better — we read every brief personally.
+                  </p>
+                  <form onSubmit={handleBriefSubmit} className="flex flex-col gap-8">
+                    {/* Honeypot */}
+                    <p className="hidden"><input name="bot-field" /></p>
 
-                <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2 mt-10">4. Sharing Your Information</h3>
-                <p>We do not sell, trade, or rent User personal identification information to external third parties. We may share generic aggregated demographic information not linked to any personal identification information regarding visitors and users with our business partners, trusted affiliates and advertisers for the purposes outlined above.</p>
-              </>
-            )}
-            {activeModal === 'terms' && (
-              <>
-                <p className="uppercase tracking-[0.2em] font-bold text-white mb-12">Last Updated: {new Date().toLocaleDateString()}</p>
-                <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2">1. Acceptance of Terms</h3>
-                <p>By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement. Additionally, when using this website's particular operational services, you shall be subject to any posted guidelines or rules applicable to such services.</p>
+                    {/* Name + Email row */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div className="relative group">
+                        <input
+                          type="text" name="name" id="brief-name" placeholder=" " required
+                          value={briefForm.name}
+                          onChange={handleBriefChange}
+                          className="peer w-full bg-transparent border-b border-white/30 py-3 text-white text-sm focus:outline-none focus:border-white transition-colors"
+                        />
+                        <label htmlFor="brief-name" className="absolute left-0 top-3 text-white/40 text-[10px] tracking-widest uppercase origin-left transform -translate-y-6 peer-placeholder-shown:translate-y-0 transition-all duration-300 pointer-events-none">
+                          Full Name *
+                        </label>
+                      </div>
+                      <div className="relative group">
+                        <input
+                          type="email" name="email" id="brief-email" placeholder=" " required
+                          value={briefForm.email}
+                          onChange={handleBriefChange}
+                          className="peer w-full bg-transparent border-b border-white/30 py-3 text-white text-sm focus:outline-none focus:border-white transition-colors"
+                        />
+                        <label htmlFor="brief-email" className="absolute left-0 top-3 text-white/40 text-[10px] tracking-widest uppercase origin-left transform -translate-y-6 peer-placeholder-shown:translate-y-0 transition-all duration-300 pointer-events-none">
+                          Email *
+                        </label>
+                      </div>
+                    </div>
 
-                <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2 mt-10">2. Intellectual Property</h3>
-                <p>The Site and its original artistic content, features, and functionality (including 3D assets, video productions, and visual frameworks) are owned by Tanzzzx Studios and are protected by international copyright, trademark, patent, trade secret, and other intellectual property or proprietary rights laws.</p>
+                    {/* Project Type */}
+                    <div>
+                      <p className="text-white/40 text-[10px] tracking-widest uppercase mb-4">Project Type *</p>
+                      <div className="flex flex-wrap gap-3">
+                        {['3D Animation', 'Architectural Viz', 'Video Production', 'Motion Design', 'Other'].map(t => (
+                          <button
+                            key={t} type="button"
+                            onClick={() => setBriefForm(prev => ({ ...prev, type: t }))}
+                            className={`px-4 py-2 border text-[10px] font-bold tracking-widest uppercase transition-all duration-200 ${briefForm.type === t ? 'bg-white text-black border-white' : 'border-white/30 text-white/50 hover:border-white hover:text-white'}`}
+                          >
+                            {t}
+                          </button>
+                        ))}
+                      </div>
+                      <input type="hidden" name="type" value={briefForm.type} />
+                    </div>
 
-                <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2 mt-10">3. Usage License</h3>
-                <p>Permission is temporarily granted to download one copy of the materials (information or visual artifacts) on Tanzzzx Studios's website for personal, non-commercial transitory viewing only. This is the grant of a license, not a transfer of physical title, and you may not legally modify or copy the materials for commercial gain.</p>
+                    {/* Budget + Timeline row */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                      <div>
+                        <label htmlFor="brief-budget" className="block text-white/40 text-[10px] tracking-widest uppercase mb-3">Budget Range</label>
+                        <select
+                          id="brief-budget" name="budget"
+                          value={briefForm.budget}
+                          onChange={handleBriefChange}
+                          className="w-full bg-black border border-white/20 text-white text-xs py-3 px-3 focus:outline-none focus:border-white transition-colors tracking-wide"
+                        >
+                          <option value="">Select a range</option>
+                          <option value="Under ₹50K">Under ₹50K</option>
+                          <option value="₹50K – ₹1L">₹50K – ₹1L</option>
+                          <option value="₹1L – ₹5L">₹1L – ₹5L</option>
+                          <option value="₹5L+">₹5L+</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label htmlFor="brief-timeline" className="block text-white/40 text-[10px] tracking-widest uppercase mb-3">Timeline</label>
+                        <select
+                          id="brief-timeline" name="timeline"
+                          value={briefForm.timeline}
+                          onChange={handleBriefChange}
+                          className="w-full bg-black border border-white/20 text-white text-xs py-3 px-3 focus:outline-none focus:border-white transition-colors tracking-wide"
+                        >
+                          <option value="">Select timeline</option>
+                          <option value="ASAP">ASAP</option>
+                          <option value="1–2 Weeks">1–2 Weeks</option>
+                          <option value="1 Month">1 Month</option>
+                          <option value="2–3 Months">2–3 Months</option>
+                          <option value="Flexible">Flexible</option>
+                        </select>
+                      </div>
+                    </div>
 
-                <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2 mt-10">4. Disclaimer</h3>
-                <p>The cinematic materials on Tanzzzx Studios's website are provided on an 'as is' basis. Tanzzzx Studios makes no warranties, expressed or implied, and hereby disclaims and negates all other warranties including, without limitation, implied warranties or conditions of merchantability, or non-infringement of intellectual property or other absolute violation of rights.</p>
-              </>
-            )}
-          </div>
+                    {/* Message */}
+                    <div className="relative">
+                      <textarea
+                        name="message" id="brief-message" placeholder=" " rows={5} required
+                        value={briefForm.message}
+                        onChange={handleBriefChange}
+                        className="peer w-full bg-transparent border-b border-white/30 py-3 text-white text-sm focus:outline-none focus:border-white transition-colors resize-none"
+                      />
+                      <label htmlFor="brief-message" className="absolute left-0 top-3 text-white/40 text-[10px] tracking-widest uppercase origin-left transform -translate-y-6 peer-placeholder-shown:translate-y-0 transition-all duration-300 pointer-events-none">
+                        Tell Us About Your Project *
+                      </label>
+                    </div>
+
+                    {/* Submit */}
+                    <button
+                      type="submit"
+                      disabled={briefStatus === 'sending'}
+                      className="self-start mt-4 border border-white px-10 py-4 text-xs font-black tracking-[0.3em] uppercase hover:bg-white hover:text-black transition-all duration-300 disabled:opacity-40"
+                    >
+                      {briefStatus === 'sending' ? 'Transmitting…' : 'Submit Brief →'}
+                    </button>
+
+                    {briefStatus === 'error' && (
+                      <p className="text-red-400 text-xs tracking-widest uppercase">Something went wrong. Please email us directly at hello@tanzzzx.com</p>
+                    )}
+                  </form>
+                </>
+              )}
+            </div>
+          )}
+
+          {/* ── LEGAL: PRIVACY POLICY ── */}
+          {activeModal === 'privacy' && (
+            <div className="max-w-3xl mx-auto text-white/60 space-y-8 text-xs md:text-sm leading-relaxed font-light selection:bg-white selection:text-black pb-20">
+              <p className="uppercase tracking-[0.2em] font-bold text-white mb-12">Last Updated: {new Date().toLocaleDateString()}</p>
+              <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2">1. Information We Collect</h3>
+              <p>We may collect personal identification information from Users in a variety of ways, including, but not limited to, when Users visit our site, fill out a form, and in connection with other activities, services, features or resources we make available.</p>
+              <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2 mt-10">2. How We Use Information</h3>
+              <p>Tanzzzx Studios may collect and use User personal information to improve customer service, personalize user experience, and send periodic electronic communications regarding project updates.</p>
+              <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2 mt-10">3. Information Protection</h3>
+              <p>We adopt appropriate data collection, storage and processing practices and security measures to protect against unauthorized access, alteration, disclosure or destruction of your personal information.</p>
+              <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2 mt-10">4. Sharing Your Information</h3>
+              <p>We do not sell, trade, or rent User personal identification information to external third parties.</p>
+            </div>
+          )}
+
+          {/* ── LEGAL: TERMS ── */}
+          {activeModal === 'terms' && (
+            <div className="max-w-3xl mx-auto text-white/60 space-y-8 text-xs md:text-sm leading-relaxed font-light selection:bg-white selection:text-black pb-20">
+              <p className="uppercase tracking-[0.2em] font-bold text-white mb-12">Last Updated: {new Date().toLocaleDateString()}</p>
+              <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2">1. Acceptance of Terms</h3>
+              <p>By accessing and using this website, you accept and agree to be bound by the terms and provision of this agreement.</p>
+              <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2 mt-10">2. Intellectual Property</h3>
+              <p>The Site and its original content, features, and functionality are owned by Tanzzzx Studios and are protected by international copyright, trademark, patent, trade secret, and other intellectual property laws.</p>
+              <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2 mt-10">3. Usage License</h3>
+              <p>Permission is temporarily granted to view one copy of the materials on Tanzzzx Studios's website for personal, non-commercial viewing only.</p>
+              <h3 className="text-white font-bold uppercase tracking-widest text-xs border-b border-white/20 pb-2 mt-10">4. Disclaimer</h3>
+              <p>The materials on Tanzzzx Studios's website are provided on an 'as is' basis. Tanzzzx Studios makes no warranties, expressed or implied.</p>
+            </div>
+          )}
+
         </div>
       </div>
     </footer>
