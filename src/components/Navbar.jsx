@@ -187,11 +187,8 @@ const Navbar = () => {
                     </span>
 
                     {/* Text block */}
-                    <div className="flex flex-col flex-1 min-w-0">
-                      <span className="text-[10px] font-bold tracking-[0.25em] text-white/25 group-hover:text-white/50 uppercase transition-colors duration-300 truncate">
-                        {link.label}
-                      </span>
-                      <span className="text-2xl sm:text-3xl font-black tracking-tight text-white/40 group-hover:text-white transition-colors duration-300 uppercase leading-tight truncate">
+                    <div className="flex-1 min-w-0">
+                      <span className="text-2xl sm:text-3xl font-black tracking-tight text-white/40 group-hover:text-white transition-colors duration-300 uppercase leading-tight truncate block">
                         {link.name}
                       </span>
                     </div>
