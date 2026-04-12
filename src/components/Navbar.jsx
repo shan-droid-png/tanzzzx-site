@@ -131,17 +131,17 @@ const Navbar = () => {
       </a>
 
       {/* ── Fullscreen Overlay Menu ── */}
-      <div className={`fixed inset-0 z-[100] bg-black flex flex-col transition-all duration-700 ${menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
-        {/* Close */}
-        <div className="flex items-center justify-between px-4 sm:px-8 md:px-14 py-4 md:py-6 border-b border-white/10">
-          <span className="text-white font-black tracking-tighter text-xl md:text-2xl uppercase">Tanzzzx Studios</span>
-          <button onClick={() => setMenuOpen(false)} className="border border-white/40 w-12 h-10 md:w-16 md:h-12 flex items-center justify-center text-white text-xl md:text-2xl font-thin hover:border-white transition-colors">
+      <div className={`fixed inset-0 z-[100] bg-black flex flex-col transition-all duration-500 ${menuOpen ? 'opacity-100 pointer-events-auto' : 'opacity-0 pointer-events-none'}`}>
+        {/* Header */}
+        <div className="flex items-center justify-between px-5 sm:px-8 md:px-14 py-4 border-b border-white/10 shrink-0">
+          <span className="text-white font-black tracking-tighter text-base md:text-xl uppercase">Tanzzzx Studios</span>
+          <button onClick={() => setMenuOpen(false)} className="border border-white/40 w-10 h-9 md:w-12 md:h-10 flex items-center justify-center text-white text-lg font-thin hover:border-white transition-colors">
             ✕
           </button>
         </div>
 
         {/* Nav Links */}
-        <nav className="flex-1 flex flex-col justify-center px-10 md:px-20 gap-2">
+        <nav className="flex-1 flex flex-col justify-center px-6 sm:px-10 md:px-20 gap-0 overflow-hidden">
           {navLinks.map((link, i) => (
             <Link
               key={link.name}
@@ -149,19 +149,24 @@ const Navbar = () => {
               smooth
               duration={800}
               onClick={() => setMenuOpen(false)}
-              className="group text-5xl md:text-7xl lg:text-8xl font-black tracking-tighter text-white/20 hover:text-white transition-colors duration-300 leading-tight cursor-pointer flex items-center gap-6"
-              style={{ transitionDelay: menuOpen ? `${i * 60}ms` : '0ms' }}
+              className="group flex items-center gap-4 py-3 sm:py-4 border-b border-white/5 last:border-0 cursor-pointer"
+              style={{ transitionDelay: menuOpen ? `${i * 50}ms` : '0ms' }}
             >
-              <span className="text-xs font-normal tracking-widest text-white/30 group-hover:text-white/60 transition-colors w-8">{String(i + 1).padStart(2, '0')}</span>
-              {link.name}
+              <span className="text-[9px] font-bold tracking-widest text-white/25 group-hover:text-white/50 transition-colors w-6 shrink-0">
+                {String(i + 1).padStart(2, '0')}
+              </span>
+              <span className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-black tracking-tight text-white/30 group-hover:text-white transition-colors duration-300 uppercase leading-none">
+                {link.name}
+              </span>
+              <span className="ml-auto text-white/0 group-hover:text-white/40 transition-colors duration-300 text-sm">→</span>
             </Link>
           ))}
         </nav>
 
         {/* Footer of overlay */}
-        <div className="px-6 sm:px-10 md:px-20 py-6 md:py-8 border-t border-white/10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <p className="text-white/30 text-[10px] md:text-xs tracking-widest uppercase">hello@tanzzzx.com</p>
-          <p className="text-white/30 text-[10px] md:text-xs tracking-widest uppercase">+91 9123855424</p>
+        <div className="px-6 sm:px-10 md:px-20 py-5 border-t border-white/10 shrink-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2">
+          <a href="mailto:hello@tanzzzx.com" className="text-white/30 hover:text-white/60 transition-colors text-[9px] tracking-widest uppercase">hello@tanzzzx.com</a>
+          <a href="tel:+919123855424" className="text-white/30 hover:text-white/60 transition-colors text-[9px] tracking-widest uppercase">+91 9123855424</a>
         </div>
       </div>
     </>
