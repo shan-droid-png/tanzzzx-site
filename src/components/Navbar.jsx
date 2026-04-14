@@ -173,9 +173,13 @@ const Navbar = () => {
               {/* Video */}
               <div className="w-full max-w-5xl aspect-video bg-black border border-white/10 shadow-[0_0_80px_rgba(255,255,255,0.05)]">
                 <iframe
-                  src="https://www.youtube.com/embed/3Y5Ve2kNMjI?autoplay=1&rel=0&modestbranding=1"
-                  title="Tanzzzx Studios Showreel"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  width="100%"
+                  height="100%"
+                  src="https://www.youtube.com/embed/3Y5Ve2kNMjI?si=D5BJ5anJbYH7qN9_&autoplay=1"
+                  title="YouTube video player"
+                  frameBorder="0"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
                   allowFullScreen
                   className="w-full h-full"
                 />
