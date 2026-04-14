@@ -264,8 +264,8 @@ const Navbar = () => {
             <div className="px-6 sm:px-8 py-6 border-t border-white/10 shrink-0">
               {/* Contact info row */}
               <div className="flex flex-col gap-2 mb-5">
-                <a href="mailto:hello@tanzzzx.com" className="text-white/30 hover:text-white transition-colors text-[9px] tracking-widest uppercase font-bold">
-                  hello@tanzzzx.com
+                <a href="mailto:tanzxstudio@gmail.com" className="text-white/30 hover:text-white transition-colors text-[9px] tracking-widest uppercase font-bold">
+                  tanzxstudio@gmail.com
                 </a>
                 <a href="tel:+919123855424" className="text-white/30 hover:text-white transition-colors text-[9px] tracking-widest uppercase font-bold">
                   +91 9123855424

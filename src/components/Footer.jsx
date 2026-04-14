@@ -81,7 +81,7 @@ const Footer = () => {
         <div className="p-10 md:p-14 border-b md:border-b-0 lg:border-r border-white/10">
           <h4 className="text-[9px] font-black tracking-[0.3em] uppercase text-white/30 mb-8">Contact</h4>
           <ul className="space-y-4">
-            <li className="text-sm font-semibold uppercase">hello@tanzzzx.com</li>
+            <li className="text-sm font-semibold uppercase">tanzxstudio@gmail.com</li>
             <li className="text-sm font-semibold uppercase">+91 9123855424</li>
             <li className="text-sm text-white/50 leading-relaxed font-light mt-6">
               194 Monochrome Ave<br />Studio 4A<br />New York, NY 10013
